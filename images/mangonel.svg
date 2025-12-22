@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f4e8d6" />
+      <stop offset="100%" stop-color="#e2d1b8" />
+    </linearGradient>
+  </defs>
+  <rect width="320" height="320" rx="28" fill="url(#grad)" />
+  <rect x="18" y="18" width="284" height="284" rx="24" fill="#fff6ea" stroke="#d7c3a5" stroke-width="4" />
+  <g fill="#2f3d56">
+    <text x="160" y="140" text-anchor="middle" font-size="22" font-family="Segoe UI, sans-serif" font-weight="700">AOE2</text>
+    <text x="160" y="180" text-anchor="middle" font-size="20" font-family="Segoe UI, sans-serif">Mangonel</text>
+  </g>
+  <g fill="#3a6f5a">
+    <circle cx="90" cy="230" r="10" />
+    <circle cx="230" cy="230" r="10" />
+    <rect x="130" y="220" width="60" height="20" rx="10" />
+  </g>
+</svg>
