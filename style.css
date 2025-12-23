@@ -130,15 +130,36 @@ main {
   color: #6b6b6b;
 }
 
-.options {
+.options-grid,
+.menu-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
+  gap: 16px;
 }
 
-.option {
-  padding: 14px 16px;
-  border-radius: 14px;
+.building-column {
+  border-radius: 16px;
+  padding: 12px;
+  border: 1px solid #eee4d8;
+  background: #fffaf3;
+  display: grid;
+  gap: 10px;
+}
+
+.building-title {
+  font-weight: 700;
+  color: #2f3d56;
+}
+
+.building-units {
+  display: grid;
+  gap: 10px;
+}
+
+.option,
+.menu-unit {
+  padding: 10px 12px;
+  border-radius: 12px;
   border: 2px solid #e6e0d8;
   background: #fff;
   cursor: pointer;
@@ -147,7 +168,8 @@ main {
   transition: all 0.2s ease;
 }
 
-.option:hover {
+.option:hover,
+.menu-unit:hover {
   border-color: #3a6f5a;
   transform: translateY(-2px);
 }
@@ -160,6 +182,26 @@ main {
 .option.wrong {
   border-color: #c74f3b;
   background: #fdece8;
+}
+
+.menu-unit.selected {
+  border-color: #2f3d56;
+  background: #e6ebf5;
+}
+
+.menu-unit.highlight-strong {
+  border-color: #1d6b3a;
+  background: #d6f5e3;
+}
+
+.menu-unit.highlight-medium {
+  border-color: #8f5d00;
+  background: #fff1cc;
+}
+
+.menu-unit.highlight-weak {
+  border-color: #9c2c1f;
+  background: #fde0da;
 }
 
 .unit-badge {
@@ -230,52 +272,6 @@ main {
 .overview-note {
   margin-top: -4px;
   color: #5d5d5d;
-}
-
-.overview-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
-  margin-top: 16px;
-}
-
-.overview-card {
-  border-radius: 16px;
-  padding: 16px;
-  border: 1px solid #eee4d8;
-  background: #fffaf3;
-  display: grid;
-  gap: 12px;
-}
-
-.overview-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.overview-header img {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: #f3ede6;
-  padding: 6px;
-}
-
-.overview-header span {
-  display: block;
-  color: #5f5f5f;
-  font-size: 0.9rem;
-}
-
-.overview-groups {
-  display: grid;
-  gap: 10px;
-}
-
-.overview-group {
-  display: grid;
-  gap: 8px;
 }
 
 footer {

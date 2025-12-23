@@ -1,9 +1,29 @@
+const buildings = [
+  {
+    id: "barracks",
+    name: "Baracken",
+  },
+  {
+    id: "archery",
+    name: "Bogenschießanlage",
+  },
+  {
+    id: "stable",
+    name: "Stall",
+  },
+  {
+    id: "other",
+    name: "Weitere Gebäude",
+  },
+];
+
 const units = [
   {
     id: "archer",
     name: "Bogenschütze",
     englishName: "Archer",
     type: "Standard",
+    building: "archery",
     image: "images/archer.svg",
     counters: {
       strong: ["skirmisher", "scorpion"],
@@ -16,6 +36,7 @@ const units = [
     name: "Plänkler",
     englishName: "Skirmisher",
     type: "Standard",
+    building: "archery",
     image: "images/skirmisher.svg",
     counters: {
       strong: ["scout", "knight"],
@@ -28,9 +49,10 @@ const units = [
     name: "Späher",
     englishName: "Scout Cavalry",
     type: "Standard",
+    building: "stable",
     image: "images/scout_cavalry.svg",
     counters: {
-      strong: ["spearman"],
+      strong: ["spearman", "pikeman"],
       medium: ["camel"],
       weak: ["monk"],
     },
@@ -40,6 +62,7 @@ const units = [
     name: "Speerkämpfer",
     englishName: "Spearman",
     type: "Standard",
+    building: "barracks",
     image: "images/spearman.svg",
     counters: {
       strong: ["archer"],
@@ -52,6 +75,7 @@ const units = [
     name: "Miliz",
     englishName: "Militia",
     type: "Standard",
+    building: "barracks",
     image: "images/militia.svg",
     counters: {
       strong: ["archer"],
@@ -64,6 +88,7 @@ const units = [
     name: "Ritter",
     englishName: "Knight",
     type: "Standard",
+    building: "stable",
     image: "images/knight.svg",
     counters: {
       strong: ["pikeman", "monk"],
@@ -76,6 +101,7 @@ const units = [
     name: "Pikenier",
     englishName: "Pikeman",
     type: "Standard",
+    building: "barracks",
     image: "images/pikeman.svg",
     counters: {
       strong: ["archer"],
@@ -88,6 +114,7 @@ const units = [
     name: "Kamelreiter",
     englishName: "Camel Rider",
     type: "Standard",
+    building: "stable",
     image: "images/camel.svg",
     counters: {
       strong: ["pikeman", "monk"],
@@ -100,10 +127,11 @@ const units = [
     name: "Mangonel",
     englishName: "Mangonel",
     type: "Standard",
+    building: "other",
     image: "images/mangonel.svg",
     counters: {
-      strong: ["knight", "scout"],
-      medium: ["camel"],
+      strong: ["knight", "camel"],
+      medium: ["scout"],
       weak: ["monk"],
     },
   },
@@ -112,6 +140,7 @@ const units = [
     name: "Skorpion",
     englishName: "Scorpion",
     type: "Standard",
+    building: "other",
     image: "images/scorpion.svg",
     counters: {
       strong: ["knight", "camel"],
@@ -124,6 +153,7 @@ const units = [
     name: "Mönch",
     englishName: "Monk",
     type: "Standard",
+    building: "other",
     image: "images/monk.svg",
     counters: {
       strong: ["scout"],
@@ -136,6 +166,7 @@ const units = [
     name: "Handkannonier",
     englishName: "Hand Cannoneer",
     type: "Standard",
+    building: "archery",
     image: "images/hand_cannoneer.svg",
     counters: {
       strong: ["knight"],
@@ -148,6 +179,7 @@ const units = [
     name: "Samurai",
     englishName: "Samurai",
     type: "Unique",
+    building: "other",
     image: "images/samurai.svg",
     counters: {
       strong: ["hand_cannoneer"],
@@ -160,6 +192,7 @@ const units = [
     name: "Berserker",
     englishName: "Berserk",
     type: "Unique",
+    building: "other",
     image: "images/berserk.svg",
     counters: {
       strong: ["archer"],
@@ -172,6 +205,7 @@ const units = [
     name: "Huskarle",
     englishName: "Huskarl",
     type: "Unique",
+    building: "other",
     image: "images/huskarle.svg",
     counters: {
       strong: ["hand_cannoneer"],
@@ -184,6 +218,7 @@ const units = [
     name: "Mangudai",
     englishName: "Mangudai",
     type: "Unique",
+    building: "other",
     image: "images/mangudai.svg",
     counters: {
       strong: ["skirmisher"],
@@ -196,6 +231,7 @@ const units = [
     name: "Jaguar-Krieger",
     englishName: "Jaguar Warrior",
     type: "Unique",
+    building: "other",
     image: "images/jaguar_warrior.svg",
     counters: {
       strong: ["archer"],
@@ -217,10 +253,11 @@ const counterOverview = document.getElementById("counterOverview");
 const uniqueToggle = document.getElementById("uniqueToggle");
 const showHints = document.getElementById("showHints");
 const newQuestionButton = document.getElementById("newQuestion");
-const overviewList = document.getElementById("overviewList");
+const counterMenu = document.getElementById("counterMenu");
 
 let currentUnit = null;
 let currentStrength = "strong";
+let selectedMenuUnit = null;
 
 const strengthLabels = {
   strong: "starker",
@@ -275,6 +312,24 @@ function createUnitBadge(unitId) {
   return badge;
 }
 
+function createBuildingColumn(buildingId, title, items, renderItem) {
+  const column = document.createElement("div");
+  column.className = "building-column";
+
+  const heading = document.createElement("div");
+  heading.className = "building-title";
+  heading.textContent = title;
+
+  const list = document.createElement("div");
+  list.className = "building-units";
+
+  items.forEach((item) => list.appendChild(renderItem(item)));
+
+  column.appendChild(heading);
+  column.appendChild(list);
+  return column;
+}
+
 function pickQuestion() {
   const pool = getAvailableUnits();
   if (pool.length === 0) {
@@ -286,18 +341,7 @@ function pickQuestion() {
   );
   currentStrength = strengths[Math.floor(Math.random() * strengths.length)];
 
-  const options = new Set(currentUnit.counters[currentStrength]);
-  const otherUnitIds = units
-    .map((unit) => unit.id)
-    .filter((id) => !options.has(id) && id !== currentUnit.id);
-
-  while (options.size < 4 && otherUnitIds.length > 0) {
-    const candidate =
-      otherUnitIds[Math.floor(Math.random() * otherUnitIds.length)];
-    options.add(candidate);
-  }
-
-  renderQuestion(shuffle(Array.from(options)));
+  renderQuestion(shuffle([...pool]));
 }
 
 function renderQuestion(options) {
@@ -310,13 +354,26 @@ function renderQuestion(options) {
   optionContainer.innerHTML = "";
   counterOverview.innerHTML = "";
 
-  options.forEach((optionId) => {
-    const button = document.createElement("button");
-    button.className = "option";
-    button.dataset.unitId = optionId;
-    button.appendChild(createUnitBadge(optionId));
-    button.addEventListener("click", () => handleAnswer(optionId, button));
-    optionContainer.appendChild(button);
+  const grouped = groupUnits(options);
+  buildings.forEach((building) => {
+    const unitsForBuilding = grouped[building.id] ?? [];
+    if (unitsForBuilding.length === 0) {
+      return;
+    }
+    const column = createBuildingColumn(
+      building.id,
+      building.name,
+      unitsForBuilding,
+      (unit) => {
+        const button = document.createElement("button");
+        button.className = "option";
+        button.dataset.unitId = unit.id;
+        button.appendChild(createUnitBadge(unit.id));
+        button.addEventListener("click", () => handleAnswer(unit.id, button));
+        return button;
+      }
+    );
+    optionContainer.appendChild(column);
   });
 }
 
@@ -371,59 +428,74 @@ function renderCounterOverview() {
   });
 }
 
-function renderOverviewList() {
-  overviewList.innerHTML = "";
-  const pool = getAvailableUnits();
+function groupUnits(unitList) {
+  return unitList.reduce((acc, unit) => {
+    const key = buildings.some((b) => b.id === unit.building)
+      ? unit.building
+      : "other";
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(unit);
+    return acc;
+  }, {});
+}
 
-  pool.forEach((unit) => {
-    const card = document.createElement("div");
-    card.className = "overview-card";
+function renderCounterMenu() {
+  counterMenu.innerHTML = "";
+  const availableUnits = getAvailableUnits();
+  const grouped = groupUnits(availableUnits);
 
-    const header = document.createElement("div");
-    header.className = "overview-header";
-
-    const image = document.createElement("img");
-    image.src = unit.image;
-    image.alt = unit.name;
-
-    const title = document.createElement("div");
-    title.innerHTML = `<strong>${unit.name}</strong><span>${unit.englishName}</span>`;
-
-    header.appendChild(image);
-    header.appendChild(title);
-    card.appendChild(header);
-
-    const groups = document.createElement("div");
-    groups.className = "overview-groups";
-
-    Object.entries(unit.counters).forEach(([strength, items]) => {
-      const group = document.createElement("div");
-      group.className = "overview-group";
-
-      const label = document.createElement("span");
-      label.className = `pill ${strengthPillClass[strength]}`;
-      label.textContent = strengthTitles[strength];
-
-      const list = document.createElement("div");
-      list.className = "counter-list";
-      items.forEach((unitId) => list.appendChild(createUnitBadge(unitId)));
-
-      group.appendChild(label);
-      group.appendChild(list);
-      groups.appendChild(group);
+  const highlightMap = new Map();
+  if (selectedMenuUnit) {
+    Object.entries(selectedMenuUnit.counters).forEach(([strength, ids]) => {
+      ids.forEach((id) => {
+        const available = availableUnits.some((unit) => unit.id === id);
+        if (available) {
+          highlightMap.set(id, strength);
+        }
+      });
     });
+  }
 
-    card.appendChild(groups);
-    overviewList.appendChild(card);
+  buildings.forEach((building) => {
+    const unitsForBuilding = grouped[building.id] ?? [];
+    if (unitsForBuilding.length === 0) {
+      return;
+    }
+    const column = createBuildingColumn(
+      building.id,
+      building.name,
+      unitsForBuilding,
+      (unit) => {
+        const button = document.createElement("button");
+        button.className = "menu-unit";
+        button.dataset.unitId = unit.id;
+        button.appendChild(createUnitBadge(unit.id));
+        if (selectedMenuUnit?.id === unit.id) {
+          button.classList.add("selected");
+        }
+        const highlight = highlightMap.get(unit.id);
+        if (highlight) {
+          button.classList.add(`highlight-${highlight}`);
+        }
+        button.addEventListener("click", () => {
+          selectedMenuUnit = unit;
+          renderCounterMenu();
+        });
+        return button;
+      }
+    );
+    counterMenu.appendChild(column);
   });
 }
 
 [newQuestionButton, uniqueToggle, showHints].forEach((element) =>
   element.addEventListener("click", () => {
     pickQuestion();
-    renderOverviewList();
+    renderCounterMenu();
   })
 );
 
 pickQuestion();
-renderOverviewList();
+renderCounterMenu();
