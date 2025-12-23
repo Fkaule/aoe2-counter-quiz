@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AOE2 Counter-Quiz</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>AOE2 Counter-Quiz</h1>
+        <p>
+          Teste dein Wissen über Kontereinheiten in Age of Empires II: Definitive
+          Edition.
+        </p>
+      </div>
+      <div class="badge">Deutsch · DE/EN Units</div>
+    </header>
+
+    <main>
+      <section class="settings">
+        <h2>Optionen</h2>
+        <label class="toggle">
+          <input type="checkbox" id="uniqueToggle" checked />
+          <span>Unique Units einbeziehen</span>
+        </label>
+        <label class="toggle">
+          <input type="checkbox" id="showHints" checked />
+          <span>Counter-Übersicht nach jeder Frage anzeigen</span>
+        </label>
+        <button id="newQuestion">Neue Frage</button>
+      </section>
+
+      <section class="quiz">
+        <div class="unit-card">
+          <div class="unit-image-wrapper">
+            <img id="unitImage" alt="" />
+          </div>
+          <div>
+            <p class="unit-type" id="unitType"></p>
+            <h2 id="unitName"></h2>
+            <p id="question"></p>
+          </div>
+        </div>
+
+        <div class="options-grid" id="options"></div>
+
+        <div class="result" id="result"></div>
+        <div class="counters" id="counterOverview"></div>
+      </section>
+
+      <section class="overview">
+        <h2>Einheiten-Menü & Counter-Highlight</h2>
+        <p class="overview-note">
+          Klicke auf eine Einheit. Passende Counter werden im Menü hervorgehoben
+          (stark/mittel/schwach).
+        </p>
+        <div class="menu-grid" id="counterMenu"></div>
+      </section>
+
+      <section class="legend">
+        <h2>Counter-Stärke</h2>
+        <div class="legend-items">
+          <span class="pill strong">Stark</span>
+          <span class="pill medium">Mittel</span>
+          <span class="pill weak">Schwach</span>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Datenbasis: Community-Infos (u. a. aoecompanion.com/counters sowie
+        erwähnte Videoquellen). Werte dienen als Lernhilfe.
+      </p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
